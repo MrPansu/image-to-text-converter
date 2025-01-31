@@ -2,6 +2,17 @@ import React from "react";
 import "./App.css";
 
 function App() {
+  const [image, setImage] = React.useState(null);
+
+  const handleImageChange = (e) => {
+    const image = e.target.files[0];
+    setImage(image);
+  };
+
+  const handleRestart = () => {
+    setImage(null);
+  };
+
   return (
     <>
       <div className="container">
@@ -9,7 +20,11 @@ function App() {
         <h1>Converter</h1>
 
         <div className="imageBox">
-          <input type="file" accept="image/*" />
+          {image ? (
+            <img src={URL.createObjectURL(image)} alt="Uploaded" />
+          ) : (
+            <input type="file" accept="image/*" onChange={handleImageChange} />
+          )}
         </div>
 
         <div className="results">
@@ -22,6 +37,9 @@ function App() {
             </p>
           </div>
           <p>copy</p>
+        </div>
+        <div>
+          <button onClick={handleRestart}>Restart</button>
         </div>
       </div>
     </>
