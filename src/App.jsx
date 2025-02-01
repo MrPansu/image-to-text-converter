@@ -1,10 +1,11 @@
 import React from "react";
 import Tesseract from "tesseract.js";
+import { FaRegCopy } from "react-icons/fa";
 import "./App.css";
 
 function App() {
   const [image, setImage] = React.useState(null);
-  const [text, setText] = React.useState("");
+  const [text, setText] = React.useState(null);
 
   const handleImageUpload = (e) => {
     const image = e.target.files[0];
@@ -14,6 +15,7 @@ function App() {
       logger: (m) => {
         if (m.status === "recognizing text") {
           setText(m.status);
+          console.info(m);
         }
       },
     }).then(({ data: { text } }) => {
@@ -21,7 +23,9 @@ function App() {
     });
   };
 
-  const handleExtractText = async () => {};
+  const handleCopy = () => {
+    navigator.clipboard.writeText(text);
+  };
 
   const handleRestart = () => {
     setImage(null);
@@ -48,8 +52,13 @@ function App() {
               {text ? <p>{text}</p> : <p>Extracted text will appear here</p>}
             </div>
           </div>
-          <p>copy</p>
+          {text && text !== "recognizing text" && (
+            <button onClick={handleCopy}>
+              <FaRegCopy />
+            </button>
+          )}
         </div>
+
         <div>
           <button onClick={handleRestart}>Restart</button>
         </div>
